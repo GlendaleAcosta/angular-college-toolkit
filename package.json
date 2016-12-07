@@ -9,6 +9,7 @@
   "author": "Glendale Acosta",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "node-sass-middleware": "^0.10.0"
   }
 }

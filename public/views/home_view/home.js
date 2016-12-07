@@ -2,7 +2,7 @@ angular.module("toolkitApp.home", ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/', {
-        templateUrl: 'home_view/home.html',
+        templateUrl: 'views/home_view/home.html',
         controller: 'homeCtrl'
     });
 }])
