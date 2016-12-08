@@ -2,7 +2,8 @@ angular.module("toolkitApp", [
     "ngRoute",
     "toolkitApp.home",
     "toolkitApp.todo",
-    "toolkitApp.login"
+    "toolkitApp.login",
+    "toolkitApp.signUp"
 ])
 
 .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider){
