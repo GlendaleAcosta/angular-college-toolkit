@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var sass = require('node-sass-middleware');
 var validator = require('express-validator');
 var pgp = require('pg-promise')();
+var bcrypt = require('bcrypt-nodejs');
 
 var app = express();
 var PORT = process.env.PORT || 3007;
@@ -57,22 +58,32 @@ app.post('/sign-up', validator() , function(req, res){
             res.send(error);
             
         } else {
+            // THIS SHOULD BE IN THE MODEL
             var email = req.body.email;
             var password = req.body.password;
 
-            db.none(
-                "INSERT INTO users (email, password) VALUES($1, $2)", [req.body.email, req.body.password])
+            // Password Encryption 
+            bcrypt.hash(password, null, null, function(err, hash){
+                // Database Query Insert new Email and Password
+                password = hash;
+                db.none(
+                    "INSERT INTO users (email, password) VALUES($1, $2)", [email, password])
 
-                .then(function(){
-                    //success
-                    console.log("success!");
-                })
-                .catch(function(error){
-                    //error
-                    console.log("error!: " + error);
-                })
+                    .then(function(){
+                        //success
+                        console.log("success!");
+                    })
+                    .catch(function(error){
+                        //error
+                        console.log("error!: " + error);
+                });
+
+            });
+
         }
     });
+
+
 
 
 });
