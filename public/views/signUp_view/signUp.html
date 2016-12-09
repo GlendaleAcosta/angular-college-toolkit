@@ -5,21 +5,27 @@
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
 
-            <form class="form">
+            <form>
                 <div class="form-group">
                     <label for="email">Email address:</label>
-                    <input type="email" class="form-control" id="email">
+                    <input ng-model="email" type="text" class="form-control" id="email">
+                    <p ng-show="emailField.email.$invalid" class="help-block">Valid Email Required</p>
                 </div>
 
-                <div class="form-group">
+                <div  class="form-group">
                     <label for="pwd">Password:</label>
-                    <input type="password" class="form-control" id="pwd">
+                    <input ng-model="password" type="password" class="form-control" id="pwd">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Sign Up</button>
+                <button ng-click="submit(email, password)" type="submit" class="btn btn-primary">Sign Up</button>
             </form>
 
         </div>
     </div>
+    
+    <hr>
+
+    <p>email: {{email}}</p>
+    <p>password: {{password}}</p>
     
 </div>

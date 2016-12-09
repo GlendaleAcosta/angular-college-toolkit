@@ -9,7 +9,10 @@
   "author": "Glendale Acosta",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "node-sass-middleware": "^0.10.0"
+    "express-validator": "^3.0.0",
+    "node-sass-middleware": "^0.10.0",
+    "pg-promise": "^5.4.7"
   }
 }

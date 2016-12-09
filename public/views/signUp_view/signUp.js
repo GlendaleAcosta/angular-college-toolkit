@@ -7,6 +7,25 @@ angular.module("toolkitApp.signUp", ['ngRoute'])
     });
 }])
 
-.controller('signUpCtrl', ['$scope', function($scope){
+.controller('signUpCtrl', ['$scope', '$http', function($scope, $http){
+
+    $scope.submit = function(email, password){
+        
+        var user = {
+            email: email,
+            password: password
+        }
+
+        $http({
+            method: 'POST',
+            url: '/sign-up',
+            data: user
+        }).then(function successCallback(response){
+
+        }, function errorCallback(response){
+
+        });
+    }
+
 
 }]);
