@@ -62,23 +62,42 @@ app.post('/sign-up', validator() , function(req, res){
             var email = req.body.email;
             var password = req.body.password;
 
-            // Password Encryption 
-            bcrypt.hash(password, null, null, function(err, hash){
-                // Database Query Insert new Email and Password
-                password = hash;
-                db.none(
-                    "INSERT INTO users (email, password) VALUES($1, $2)", [email, password])
+            // Check if the email is already used
+            db.query("SELECT email FROM users WHERE email=$1", [email])
+                
+                .then(function(data){
+                    console.log(data[0].email);
+                    
+                    if(!data[0].email) {
+                       console.log("The email doesn't exist"); 
+                       
+                        // Password Encryption 
+                        bcrypt.hash(password, null, null, function(err, hash){
+                            // Database Query Insert new Email and Password
+                            password = hash;
 
-                    .then(function(){
-                        //success
-                        console.log("success!");
-                    })
-                    .catch(function(error){
-                        //error
-                        console.log("error!: " + error);
-                });
+                            db.none("INSERT INTO users (email, password) VALUES($1, $2)", [email, password])
 
+                                .then(function(){
+                                    //success
+                                    console.log("success!");
+                                })
+                                .catch(function(error){
+                                    //error
+                                    console.log("error!: " + error);
+                            });
+
+                        });
+
+                    } else {
+                       console.log("The email exists");
+                    }
+                })
+                .catch(function(error){
+                    //error
+                    
             });
+
 
         }
     });

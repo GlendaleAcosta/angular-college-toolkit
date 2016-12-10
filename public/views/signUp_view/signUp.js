@@ -21,7 +21,7 @@ angular.module("toolkitApp.signUp", ['ngRoute'])
             url: '/sign-up',
             data: user
         }).then(function successCallback(response){
-
+            
         }, function errorCallback(response){
 
         });
