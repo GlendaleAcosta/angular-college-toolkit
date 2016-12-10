@@ -152,6 +152,8 @@ app.post('/login', validator(), function(req, res){
 
                          });
 
+                     } else {
+                         res.send({msg: "Password or email is incorrect."});
                      }
                 })
        }
