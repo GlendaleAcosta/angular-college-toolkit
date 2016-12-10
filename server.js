@@ -58,7 +58,7 @@ app.post('/sign-up', validator() , function(req, res){
             res.send(error);
             
         } else {
-            // THIS SHOULD BE IN THE MODEL
+            // THIS SHOULD BE IN THE MODEL -----------------------
             var email = req.body.email;
             var password = req.body.password;
 
@@ -66,11 +66,10 @@ app.post('/sign-up', validator() , function(req, res){
             db.query("SELECT email FROM users WHERE email=$1", [email])
                 
                 .then(function(data){
-                    console.log(data[0].email);
-                    
-                    if(!data[0].email) {
+                                
+                    if(data.length < 1) {
                        console.log("The email doesn't exist"); 
-                       
+
                         // Password Encryption 
                         bcrypt.hash(password, null, null, function(err, hash){
                             // Database Query Insert new Email and Password
@@ -81,6 +80,7 @@ app.post('/sign-up', validator() , function(req, res){
                                 .then(function(){
                                     //success
                                     console.log("success!");
+                                    res.send({ msg: "Congratulations, your account has been made!"});
                                 })
                                 .catch(function(error){
                                     //error
@@ -91,14 +91,16 @@ app.post('/sign-up', validator() , function(req, res){
 
                     } else {
                        console.log("The email exists");
+                       res.send({ msg: "An account with that email address already exists"});
                     }
                 })
                 .catch(function(error){
                     //error
+                    console.log(error);
                     
             });
 
-
+        // END MODEL ----------------------------------------------------------
         }
     });
 
