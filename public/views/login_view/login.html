@@ -8,22 +8,28 @@
             <form class="form">
                 <div class="form-group">
                     <label for="email">Email address:</label>
-                    <input type="email" class="form-control" id="email">
+                    <input ng-model="email" type="email" class="form-control" id="email">
                 </div>
 
                 <div class="form-group">
                     <label for="pwd">Password:</label>
-                    <input type="password" class="form-control" id="pwd">
+                    <input ng-model="password" type="password" class="form-control" id="pwd">
                 </div>
 
                 <div class="checkbox">
                     <label><input type="checkbox"> Remember me</label>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button ng-click="submit(email, password)" type="submit" class="btn btn-primary">Login</button>
             </form>
 
         </div>
     </div>
+
+    <hr>
+
+    <h1>Message: {{msg}}</h1>
+    <p>Email: {{email}}</p>
+    <p>Password: {{password}}</p>
     
 </div>

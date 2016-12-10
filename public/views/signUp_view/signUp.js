@@ -23,6 +23,7 @@ angular.module("toolkitApp.signUp", ['ngRoute'])
         }).then(function successCallback(response){
             console.log(response.data.msg);
             $scope.msg = response.data.msg;
+            
         }, function errorCallback(response){
 
         });

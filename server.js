@@ -67,8 +67,8 @@ app.post('/sign-up', validator() , function(req, res){
                 
                 .then(function(data){
                                 
-                    if(data.length < 1) {
-                       console.log("The email doesn't exist"); 
+                    if(data.length < 1) { 
+                        // Email does NOT exist (A new account can be made)
 
                         // Password Encryption 
                         bcrypt.hash(password, null, null, function(err, hash){
@@ -90,6 +90,7 @@ app.post('/sign-up', validator() , function(req, res){
                         });
 
                     } else {
+                        // Email exists (Cannot create a new account)
                        console.log("The email exists");
                        res.send({ msg: "An account with that email address already exists"});
                     }
@@ -109,6 +110,54 @@ app.post('/sign-up', validator() , function(req, res){
 
 });
 
+
+app.post('/login', validator(), function(req, res){
+
+    req.checkBody('email', 'Invalid Email').notEmpty().isEmail();
+    req.checkBody('password', 'Invalid Password').notEmpty();
+
+    req.sanitizeBody('email').normalizeEmail();
+    req.sanitizeBody('password');
+
+    req.getValidationResult().then(function(result) {
+
+       if (!result.isEmpty()) {
+            var error = result.array();
+            res.send(error);
+
+       } else {
+            var email = req.body.email;
+            var password = req.body.password;   
+            
+            db.query("SELECT email, password FROM users WHERE email=$1", [email])
+
+                .then(function(data){
+                    
+                    if(data.length >= 1) { 
+                          
+                        // Compares password input and password in database
+                        bcrypt.compare(password, data[0].password, function(error, result){
+                                                      
+                                console.log("COMPARISON" +  error);
+                                if(result === true){
+                                    // idk how to actually log in
+                                    res.send({
+                                        msg: "Logged in as " + email
+                                    });
+                                } else {
+                                    res.send({
+                                        msg: "Password or email is incorrect."
+                                    });
+                                }
+
+                         });
+
+                     }
+                })
+       }
+
+    });
+});
 
 
 // Starts Server
