@@ -138,22 +138,26 @@ app.post('/login', validator(), function(req, res){
                         // Compares password input and password in database
                         bcrypt.compare(password, data[0].password, function(error, result){
                                                       
-                                console.log("COMPARISON" +  error);
                                 if(result === true){
                                     // idk how to actually log in
                                     res.send({
-                                        msg: "Logged in as " + email
+                                        msg: "Logged in as " + email,
+                                        loginSuccess: true
                                     });
                                 } else {
                                     res.send({
-                                        msg: "Password or email is incorrect."
+                                        msg: "Password or email is incorrect.",
+                                        loginSuccess: false
                                     });
                                 }
 
                          });
 
                      } else {
-                         res.send({msg: "Password or email is incorrect."});
+                         res.send({
+                             msg: "Password or email is incorrect.",
+                             loginSuccess: false
+                        });
                      }
                 })
        }

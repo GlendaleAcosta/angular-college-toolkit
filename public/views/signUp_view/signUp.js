@@ -9,6 +9,8 @@ angular.module("toolkitApp.signUp", ['ngRoute'])
 
 .controller('signUpCtrl', ['$scope', '$http', function($scope, $http){
 
+    $scope.msg = false;
+
     $scope.submit = function(email, password){
         
         var user = {
@@ -21,7 +23,7 @@ angular.module("toolkitApp.signUp", ['ngRoute'])
             url: '/sign-up',
             data: user
         }).then(function successCallback(response){
-            console.log(response.data.msg);
+            
             $scope.msg = response.data.msg;
             
         }, function errorCallback(response){
