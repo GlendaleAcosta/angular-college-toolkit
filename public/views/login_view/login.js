@@ -7,7 +7,7 @@ angular.module("toolkitApp.login", ['ngRoute'])
     });
 }])
 
-.controller('loginCtrl', ['$scope', '$http', '$location', function($scope, $http, $location){
+.controller('loginCtrl', ['$scope', '$http', '$location', 'loginData', 'authentication' ,function($scope, $http, $location, loginData, authentication){
 
     $scope.submit = function(email, password){
         
@@ -24,8 +24,12 @@ angular.module("toolkitApp.login", ['ngRoute'])
             $scope.msg = response.data.msg;
             var loginSuccess = response.data.loginSuccess;
             
+            
             if (loginSuccess === true) {
+                loginData.setMsg(response.data.msg);  
+                authentication.setToken(response.data.token);
                 $location.path("/");
+
             }
 
         }, function errorCallback(response){

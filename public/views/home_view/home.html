@@ -1,6 +1,6 @@
-<div ng-show="true" class="alert alert-success">
+<div ng-show="msg" class="alert alert-success">
     <div class="row">
-        <p class="text col-md-6 col-md-offset-3">Hello! {{msg}}</p>
+        <p class="text col-md-6 col-md-offset-3">Message: {{msg}}</p>
     </div>
 </div>
 
@@ -17,7 +17,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
-                
+                <button ng-click="logout()" type="button" class="btn btn-primary">Logout</button>
             </div>
         </div>
     </div>

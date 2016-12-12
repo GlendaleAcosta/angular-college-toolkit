@@ -6,6 +6,8 @@ var sass = require('node-sass-middleware');
 var validator = require('express-validator');
 var pgp = require('pg-promise')();
 var bcrypt = require('bcrypt-nodejs');
+var cookieParser = require('cookie-parser');
+var jwt = require('jsonwebtoken');
 
 var app = express();
 var PORT = process.env.PORT || 3007;
@@ -31,8 +33,9 @@ app.use(sass({
     prefix: '/css',
     indentedSyntax: true
 }));
+
 app.use(express.static(path.join(__dirname, '/public'))); // Serves static files
-app.use(bodyParser.json()) // Parses Data 
+app.use(bodyParser.json()); // Parses Data 
 
 
 
@@ -42,7 +45,8 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + "/public/index.html");
 });
 
-app.post('/sign-up', validator() , function(req, res){
+app.post('/sign-up', validator() , function(req, res){    
+
 
     // Security
     req.checkBody('email', 'Invalid Email').notEmpty().isEmail();
@@ -113,6 +117,8 @@ app.post('/sign-up', validator() , function(req, res){
 
 app.post('/login', validator(), function(req, res){
 
+    
+
     req.checkBody('email', 'Invalid Email').notEmpty().isEmail();
     req.checkBody('password', 'Invalid Password').notEmpty();
 
@@ -139,11 +145,32 @@ app.post('/login', validator(), function(req, res){
                         bcrypt.compare(password, data[0].password, function(error, result){
                                                       
                                 if(result === true){
-                                    // idk how to actually log in
-                                    res.send({
+                                    // Generate a json web token
+                                    var token = jwt.sign({
+                                        email: req.body.email
+                                    }, "my_secret");
+
+                                    console.log(token);
+
+                                    // Encrypt the token
+                                    // bcrypt.hash(token, null, null, function(err, result){
+
+                                    //     console.log("Hashed: " + result);
+
+                                    //     res.json({
+                                    //         msg: "Logged in as " + email,
+                                    //         loginSuccess: true,
+                                    //         token: result 
+                                    //     });
+                                    // });
+
+                                    res.json({
                                         msg: "Logged in as " + email,
-                                        loginSuccess: true
+                                        loginSuccess: true,
+                                        token: token 
                                     });
+
+
                                 } else {
                                     res.send({
                                         msg: "Password or email is incorrect.",
@@ -163,6 +190,10 @@ app.post('/login', validator(), function(req, res){
        }
 
     });
+});
+
+app.post('/authenticate', function(req,res){
+
 });
 
 

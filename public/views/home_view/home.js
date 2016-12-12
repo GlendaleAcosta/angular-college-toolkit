@@ -7,6 +7,10 @@ angular.module("toolkitApp.home", ['ngRoute'])
     });
 }])
 
-.controller('homeCtrl', ['$scope', function($scope){
+.controller('homeCtrl', ['$scope', 'loginData', 'authentication' , function($scope, loginData, authentication){
+    $scope.msg = loginData.getMsg();
 
+    $scope.logout = function(){
+        authentication.logout();
+    }
 }]);
