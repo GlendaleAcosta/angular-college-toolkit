@@ -6,7 +6,6 @@ var sass = require('node-sass-middleware');
 var validator = require('express-validator');
 var pgp = require('pg-promise')();
 var bcrypt = require('bcrypt-nodejs');
-var cookieParser = require('cookie-parser');
 var jwt = require('jsonwebtoken');
 
 var app = express();
