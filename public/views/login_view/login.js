@@ -9,6 +9,8 @@ angular.module("toolkitApp.login", ['ngRoute'])
 
 .controller('loginCtrl', ['$scope', '$http', '$location', 'loginData', 'authentication' ,function($scope, $http, $location, loginData, authentication){
 
+    $scope.loginSuccess = null;
+
     $scope.submit = function(email, password){
         
         var user = {
@@ -22,10 +24,9 @@ angular.module("toolkitApp.login", ['ngRoute'])
             data: user
         }).then(function successCallback(response){
             $scope.msg = response.data.msg;
-            var loginSuccess = response.data.loginSuccess;
+            $scope.loginSuccess = response.data.loginSuccess;
             
-            
-            if (loginSuccess === true) {
+            if ($scope.loginSuccess === true) {
                 loginData.setMsg(response.data.msg);  
                 authentication.setToken(response.data.token);
                 $location.path("/");

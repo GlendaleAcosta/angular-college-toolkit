@@ -10,6 +10,7 @@ angular.module("toolkitApp.signUp", ['ngRoute'])
 .controller('signUpCtrl', ['$scope', '$http', function($scope, $http){
 
     $scope.msg = false;
+    $scope.signUpSuccess = null;
 
     $scope.submit = function(email, password){
         
@@ -25,6 +26,10 @@ angular.module("toolkitApp.signUp", ['ngRoute'])
         }).then(function successCallback(response){
             
             $scope.msg = response.data.msg;
+            $scope.signUpSuccess = response.data.signUpSuccess;
+
+            $scope.email = "";
+            $scope.password = "";
             
         }, function errorCallback(response){
 

@@ -1,5 +1,16 @@
 <div class="container">
     <h1>Login Page</h1>
+
+    
+    <div ng-show="loginSuccess === false" class="alert alert-danger">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <p>Sorry. {{msg}}</p>
+            </div>
+        </div>
+    </div>
+    
+
     <hr>
 
     <div class="row">
@@ -16,20 +27,16 @@
                     <input ng-model="password" type="password" class="form-control" id="pwd">
                 </div>
 
-                <div class="checkbox">
+                <!--<div class="checkbox">
                     <label><input type="checkbox"> Remember me</label>
-                </div>
+                </div>-->
 
-                <button ng-click="submit(email, password)" type="submit" class="btn btn-primary">Login</button>
+                <button ng-click="submit(email, password)" type="submit" class="form-control btn btn-primary">Login</button>
             </form>
 
         </div>
     </div>
 
     <hr>
-
-    <h1>Message: {{msg}}</h1>
-    <p>Email: {{email}}</p>
-    <p>Password: {{password}}</p>
     
 </div>

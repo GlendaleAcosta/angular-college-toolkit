@@ -63,7 +63,7 @@ app.post('/sign-up', validator() , function(req, res){
             
         }
     });
-            // THIS SHOULD BE IN THE MODEL -----------------------
+    // THIS SHOULD BE IN THE MODEL -----------------------
     var email = req.body.email;
     var password = req.body.password;
 
@@ -75,7 +75,10 @@ app.post('/sign-up', validator() , function(req, res){
             // If email exists
             if(data.length > 0) {
                 console.log("The email exists");
-                return res.json({ msg: "An account with that email address already exists"});
+                return res.json({ 
+                    msg: "An account with that email address already exists",
+                    signUpSuccess: false
+                });
             }      
 
             
@@ -88,9 +91,11 @@ app.post('/sign-up', validator() , function(req, res){
                 db.none("INSERT INTO users (email, password) VALUES($1, $2)", [email, password])
 
                     .then(function(){
-                        //success
-                        console.log("success!");
-                        res.send({ msg: "Congratulations, your account has been made!"});
+                        //success 
+                        res.json({ 
+                            msg: "Congratulations, your account has been made!",
+                            signUpSuccess: true
+                        });
                     })
                     .catch(function(error){
                         //error
@@ -108,7 +113,7 @@ app.post('/sign-up', validator() , function(req, res){
                 
     });
 
-        // END MODEL ----------------------------------------------------------
+    // END MODEL ----------------------------------------------------------
         
 
 
@@ -152,8 +157,6 @@ app.post('/login', validator(), function(req, res){
                 });
             }
             
-                
-                    
                 // Compares password input and password in database
             bcrypt.compare(password, data[0].password, function(error, result){
                 
@@ -177,9 +180,6 @@ app.post('/login', validator(), function(req, res){
                     loginSuccess: true,
                     token: token 
                 });
-
-
-                    
 
             });
                 
