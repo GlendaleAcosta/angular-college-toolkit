@@ -23,8 +23,8 @@ var connection = {
 var db = pgp(connection); // db connection
 
 
- // Allows use of Sass
-app.use(sass({
+ 
+app.use(sass({ 
     src: path.join(__dirname , '/public/sass'),
     dest: path.join(__dirname, '/public/css'),
     debug: true,
@@ -32,9 +32,9 @@ app.use(sass({
     prefix: '/css',
     indentedSyntax: true
 }));
-
 app.use(express.static(path.join(__dirname, '/public'))); // Serves static files
-app.use(bodyParser.json()); // Parses Data 
+app.use(bodyParser.json()); // Parses Data
+
 
 
 
@@ -54,59 +54,62 @@ app.post('/sign-up', validator() , function(req, res){
     req.sanitizeBody('email').normalizeEmail();
     req.sanitizeBody('password');
 
-
+    // Error Results
     req.getValidationResult().then(function(result){
+        // If there are error results
         if (!result.isEmpty()) {
             var error = result.array();
-            res.send(error);
+            return res.send(error);
             
-        } else {
-            // THIS SHOULD BE IN THE MODEL -----------------------
-            var email = req.body.email;
-            var password = req.body.password;
-
-            // Check if the email is already used
-            db.query("SELECT email FROM users WHERE email=$1", [email])
-                
-                .then(function(data){
-                                
-                    if(data.length < 1) { 
-                        // Email does NOT exist (A new account can be made)
-
-                        // Password Encryption 
-                        bcrypt.hash(password, null, null, function(err, hash){
-                            // Database Query Insert new Email and Password
-                            password = hash;
-
-                            db.none("INSERT INTO users (email, password) VALUES($1, $2)", [email, password])
-
-                                .then(function(){
-                                    //success
-                                    console.log("success!");
-                                    res.send({ msg: "Congratulations, your account has been made!"});
-                                })
-                                .catch(function(error){
-                                    //error
-                                    console.log("error!: " + error);
-                            });
-
-                        });
-
-                    } else {
-                        // Email exists (Cannot create a new account)
-                       console.log("The email exists");
-                       res.send({ msg: "An account with that email address already exists"});
-                    }
-                })
-                .catch(function(error){
-                    //error
-                    console.log(error);
-                    
-            });
-
-        // END MODEL ----------------------------------------------------------
         }
     });
+            // THIS SHOULD BE IN THE MODEL -----------------------
+    var email = req.body.email;
+    var password = req.body.password;
+
+    // Check if the email is already used
+    db.query("SELECT email FROM users WHERE email=$1", [email])
+    
+        .then(function(data){
+
+            // If email exists
+            if(data.length > 0) {
+                console.log("The email exists");
+                return res.json({ msg: "An account with that email address already exists"});
+            }      
+
+            
+            // Email does NOT exist (A new account can be made)
+            // Password Encryption 
+            bcrypt.hash(password, null, null, function(err, hash){
+                // Database Query Insert new Email and Password
+                password = hash;
+
+                db.none("INSERT INTO users (email, password) VALUES($1, $2)", [email, password])
+
+                    .then(function(){
+                        //success
+                        console.log("success!");
+                        res.send({ msg: "Congratulations, your account has been made!"});
+                    })
+                    .catch(function(error){
+                        //error
+                        console.log("error!: " + error);
+                    });
+
+            });
+
+                
+        })
+
+        .catch(function(error){
+            //error
+            console.log(error);
+                
+    });
+
+        // END MODEL ----------------------------------------------------------
+        
 
 
 
@@ -126,69 +129,62 @@ app.post('/login', validator(), function(req, res){
 
     req.getValidationResult().then(function(result) {
 
+       // If there are error results
        if (!result.isEmpty()) {
             var error = result.array();
-            res.send(error);
+            return res.send(error);
 
-       } else {
-            var email = req.body.email;
-            var password = req.body.password;   
-            
-            db.query("SELECT email, password FROM users WHERE email=$1", [email])
-
-                .then(function(data){
-                    
-                    if(data.length >= 1) { 
-                          
-                        // Compares password input and password in database
-                        bcrypt.compare(password, data[0].password, function(error, result){
-                                                      
-                                if(result === true){
-                                    // Generate a json web token
-                                    var token = jwt.sign({
-                                        email: req.body.email
-                                    }, "my_secret");
-
-                                    console.log(token);
-
-                                    // Encrypt the token
-                                    // bcrypt.hash(token, null, null, function(err, result){
-
-                                    //     console.log("Hashed: " + result);
-
-                                    //     res.json({
-                                    //         msg: "Logged in as " + email,
-                                    //         loginSuccess: true,
-                                    //         token: result 
-                                    //     });
-                                    // });
-
-                                    res.json({
-                                        msg: "Logged in as " + email,
-                                        loginSuccess: true,
-                                        token: token 
-                                    });
-
-
-                                } else {
-                                    res.send({
-                                        msg: "Password or email is incorrect.",
-                                        loginSuccess: false
-                                    });
-                                }
-
-                         });
-
-                     } else {
-                         res.send({
-                             msg: "Password or email is incorrect.",
-                             loginSuccess: false
-                        });
-                     }
-                })
        }
 
     });
+
+    var email = req.body.email;
+    var password = req.body.password;   
+    
+    db.query("SELECT email, password FROM users WHERE email=$1", [email])
+
+        .then(function(data){
+
+            if (data.length === 0) {
+                res.json({
+                    msg: "Password or email is incorrect.",
+                    loginSuccess: false
+                });
+            }
+            
+                
+                    
+                // Compares password input and password in database
+            bcrypt.compare(password, data[0].password, function(error, result){
+                
+                if(result === false) {
+                    return res.json({
+                        msg: "Password or email is incorrect.",
+                        loginSuccess: false
+                    });
+                }
+
+                
+                // Generate a json web token
+                var token = jwt.sign({
+                    email: req.body.email
+                }, "my_secret");
+
+                console.log(token);
+
+                return res.json({
+                    msg: "Logged in as " + email,
+                    loginSuccess: true,
+                    token: token 
+                });
+
+
+                    
+
+            });
+                
+    });
+       
 });
 
 app.post('/authenticate', function(req,res){
