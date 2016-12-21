@@ -14,7 +14,7 @@ var connection = {
 }
 var db = pgp(connection); // db connection
 
-exports.postSignUp = function(req, res){    
+exports.postSignUp = (req, res) => {    
 
 
     // Security
@@ -40,7 +40,7 @@ exports.postSignUp = function(req, res){
     // Check if the email is already used
     db.query("SELECT email FROM users WHERE email=$1", [email])
     
-        .then(function(data){
+        .then((data) => {
 
             // If email exists
             if(data.length > 0) {
@@ -54,20 +54,20 @@ exports.postSignUp = function(req, res){
             
             // Email does NOT exist (A new account can be made)
             // Password Encryption 
-            bcrypt.hash(password, null, null, function(err, hash){
+            bcrypt.hash(password, null, null, (err, hash) => {
                 // Database Query Insert new Email and Password
                 password = hash;
 
                 db.none("INSERT INTO users (email, password) VALUES($1, $2)", [email, password])
 
-                    .then(function(){
+                    .then( () => {
                         //success 
                         res.json({ 
                             msg: "Congratulations, your account has been made!",
                             signUpSuccess: true
                         });
                     })
-                    .catch(function(error){
+                    .catch( (error) => {
                         //error
                         console.log("error!: " + error);
                     });
@@ -77,7 +77,7 @@ exports.postSignUp = function(req, res){
                 
         })
 
-        .catch(function(error){
+        .catch( (error) => {
             //error
             console.log(error);
                 
@@ -88,7 +88,7 @@ exports.postSignUp = function(req, res){
 
 
 
-exports.postLogin = function(req, res){
+exports.postLogin = (req, res) => {
 
     
 
@@ -98,7 +98,7 @@ exports.postLogin = function(req, res){
     req.sanitizeBody('email').normalizeEmail();
     req.sanitizeBody('password');
 
-    req.getValidationResult().then(function(result) {
+    req.getValidationResult().then( (result) => {
 
        // If there are error results
        if (!result.isEmpty()) {
@@ -114,7 +114,7 @@ exports.postLogin = function(req, res){
     
     db.query("SELECT email, password FROM users WHERE email=$1", [email])
 
-        .then(function(data){
+        .then( (data) => {
 
             if (data.length === 0) {
                 res.json({
@@ -124,7 +124,7 @@ exports.postLogin = function(req, res){
             }
             
                 // Compares password input and password in database
-            bcrypt.compare(password, data[0].password, function(error, result){
+            bcrypt.compare(password, data[0].password, (error, result) => {
                 
                 if(result === false) {
                     return res.json({

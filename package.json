@@ -13,8 +13,10 @@
     "body-parser": "^1.15.2",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
+    "express-session": "^1.14.2",
     "express-validator": "^3.0.0",
     "jsonwebtoken": "^7.2.1",
+    "lusca": "^1.4.1",
     "node-sass-middleware": "^0.10.0",
     "pg-promise": "^5.4.7"
   }
