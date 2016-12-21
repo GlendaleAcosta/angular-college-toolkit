@@ -1,12 +1,10 @@
 // IMPORTS
 var express = require('express');
 var path = require('path');
+require('dotenv').config();
 var bodyParser = require('body-parser');
 var sass = require('node-sass-middleware');
 var validator = require('express-validator');
-var pgp = require('pg-promise')();
-var bcrypt = require('bcrypt-nodejs');
-var jwt = require('jsonwebtoken');
 
 var app = express();
 var PORT = process.env.PORT || 3007;
@@ -27,6 +25,7 @@ app.use(sass({
 app.use(express.static(path.join(__dirname, '/public'))); // Serves static files
 app.use(bodyParser.json()); // Parses Data
 app.use(validator());
+console.log(process.env.SECRET_KEY);
 
 
 

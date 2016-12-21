@@ -2,6 +2,7 @@ var bcrypt = require('bcrypt-nodejs');
 var jwt = require('jsonwebtoken');
 var validator = require('express-validator');
 var pgp = require('pg-promise')();
+require('dotenv').config();
 
 // db connection config
 var connection = {
@@ -136,7 +137,7 @@ exports.postLogin = function(req, res){
                 // Generate a json web token
                 var token = jwt.sign({
                     email: req.body.email
-                }, "my_secret");
+                }, process.env.SECRET_KEY); //my_secret
 
                 console.log(token);
 
