@@ -1,16 +1,16 @@
+require('dotenv').config();
 var bcrypt = require('bcrypt-nodejs');
 var jwt = require('jsonwebtoken');
 var validator = require('express-validator');
 var pgp = require('pg-promise')();
-require('dotenv').config();
 
 // db connection config
 var connection = {
-    host: 'localhost',
-    port: '5433',
-    database: 'postgres',
-    user: 'postgres',
-    password: 'rootpw'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD
 }
 var db = pgp(connection); // db connection
 
